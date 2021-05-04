@@ -1,4 +1,9 @@
-pragma solidity ^0.5.0;
+/**
+ *Submitted for verification at BscScan.com on 2021-04-10
+*/
+
+// SPDX-License-Identifier: MIT
+pragma solidity >=0.4.21 <0.9.0;
 
 import "./DappToken.sol";
 import "./DaiToken.sol";

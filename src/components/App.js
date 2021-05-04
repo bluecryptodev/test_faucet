@@ -18,6 +18,7 @@ class App extends Component {
     const web3 = window.web3
 
     const accounts = await web3.eth.getAccounts()
+    console.log(accounts)
     this.setState({ account: accounts[0] })
 
     const networkId = await web3.eth.net.getId()
@@ -59,6 +60,7 @@ class App extends Component {
   }
 
   async loadWeb3() {
+    console.log(window.ethereum, window.web3)
     if (window.ethereum) {
       window.web3 = new Web3(window.ethereum)
       await window.ethereum.enable()
