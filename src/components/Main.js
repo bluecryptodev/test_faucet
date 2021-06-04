@@ -10,14 +10,13 @@ class Main extends Component {
         <table className="table table-borderless text-muted text-center">
           <thead>
             <tr>
-              <th scope="col">Staking Balance</th>
-              <th scope="col">Reward Balance</th>
+              <th scope="col">TestToken Balance</th>
             </tr>
           </thead>
           <tbody>
+            {console.log(this.props)}
             <tr>
-              <td>{window.web3.utils.fromWei(this.props.stakingBalance, 'Ether')} mDAI</td>
-              <td>{window.web3.utils.fromWei(this.props.dappTokenBalance, 'Ether')} DAPP</td>
+              <td>{this.props.testTokenBalance} TTET</td>
             </tr>
           </tbody>
         </table>
@@ -28,15 +27,15 @@ class Main extends Component {
 
             <form className="mb-3" onSubmit={(event) => {
                 event.preventDefault()
-                let amount
-                amount = this.input.value.toString()
-                amount = window.web3.utils.toWei(amount, 'Ether')
-                this.props.stakeTokens(amount)
+                let address
+                address = this.input.value.toString()
+                console.log(address)
+                this.props.sendToken(address)
               }}>
               <div>
-                <label className="float-left"><b>Stake Tokens</b></label>
+                <label className="float-left"><b>Faucet Tokens</b></label>
                 <span className="float-right text-muted">
-                  Balance: {window.web3.utils.fromWei(this.props.daiTokenBalance, 'Ether')}
+                  Balance: {this.props.testTokenBalance}
                 </span>
               </div>
               <div className="input-group mb-4">
@@ -53,17 +52,8 @@ class Main extends Component {
                   </div>
                 </div>
               </div>
-              <button type="submit" className="btn btn-primary btn-block btn-lg">STAKE!</button>
+              <button type="submit" className="btn btn-primary btn-block btn-lg">Send!</button>
             </form>
-            <button
-              type="submit"
-              className="btn btn-link btn-block btn-sm"
-              onClick={(event) => {
-                event.preventDefault()
-                this.props.unstakeTokens()
-              }}>
-                UN-STAKE...
-              </button>
           </div>
         </div>
 

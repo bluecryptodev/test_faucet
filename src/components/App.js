@@ -3,6 +3,7 @@ import Web3 from 'web3'
 import DaiToken from '../abis/DaiToken.json'
 import DappToken from '../abis/DappToken.json'
 import TokenFarm from '../abis/TokenFarm.json'
+import TestToken from '../abis/TestToken.json';
 import Navbar from './Navbar'
 import Main from './Main'
 import './App.css'
@@ -22,50 +23,30 @@ class App extends Component {
     this.setState({ account: accounts[0] })
 
     const networkId = await web3.eth.net.getId()
-
-    // Load DaiToken
-    const daiTokenData = DaiToken.networks[networkId]
-    if(daiTokenData) {
-      const daiToken = new web3.eth.Contract(DaiToken.abi, daiTokenData.address)
-      this.setState({ daiToken })
-      let daiTokenBalance = await daiToken.methods.balanceOf(this.state.account).call()
-      this.setState({ daiTokenBalance: daiTokenBalance.toString() })
-    } else {
-      window.alert('DaiToken contract not deployed to detected network.')
-    }
-
-    // Load DappToken
-    const dappTokenData = DappToken.networks[networkId]
-    if(dappTokenData) {
-      const dappToken = new web3.eth.Contract(DappToken.abi, dappTokenData.address)
-      this.setState({ dappToken })
-      let dappTokenBalance = await dappToken.methods.balanceOf(this.state.account).call()
-      this.setState({ dappTokenBalance: dappTokenBalance.toString() })
-    } else {
-      window.alert('DappToken contract not deployed to detected network.')
-    }
-
-    // Load TokenFarm
-    const tokenFarmData = TokenFarm.networks[networkId]
-    if(tokenFarmData) {
-      const tokenFarm = new web3.eth.Contract(TokenFarm.abi, tokenFarmData.address)
-      this.setState({ tokenFarm })
-      let stakingBalance = await tokenFarm.methods.stakingBalance(this.state.account).call()
-      this.setState({ stakingBalance: stakingBalance.toString() })
-    } else {
-      window.alert('TokenFarm contract not deployed to detected network.')
-    }
+      const testToken = new web3.eth.Contract(TestToken.abi, '0x83b5d1eb9Fa84984Ca20eB921aD327e1C9746667')
+      this.setState({ testToken })
+      let testTokenBalance = await testToken.methods.balanceOf(accounts[0]).call()
+      console.log(testTokenBalance)
+      this.setState({ testTokenBalance: testTokenBalance.toString() })
 
     this.setState({ loading: false })
+    web3.eth.getBalance(this.state.account, function(err, result) {
+      if (err) {
+        console.log(err)
+      } else {
+        console.log(web3.utils.fromWei(result, "ether") + " ETH")
+      }
+    })
   }
 
   async loadWeb3() {
-    console.log(window.ethereum, window.web3)
     if (window.ethereum) {
       window.web3 = new Web3(window.ethereum)
       await window.ethereum.enable()
+      console.log(window.web3.currentProvider)
     }
     else if (window.web3) {
+      console.log(window.web3.currentProvider)
       window.web3 = new Web3(window.web3.currentProvider)
     }
     else {
@@ -73,32 +54,22 @@ class App extends Component {
     }
   }
 
-  stakeTokens = (amount) => {
+  sendToken = (address) => {
     this.setState({ loading: true })
-    this.state.daiToken.methods.approve(this.state.tokenFarm._address, amount).send({ from: this.state.account }).on('transactionHash', (hash) => {
-      this.state.tokenFarm.methods.stakeTokens(amount).send({ from: this.state.account }).on('transactionHash', (hash) => {
-        this.setState({ loading: false })
-      })
-    })
-  }
-
-  unstakeTokens = (amount) => {
-    this.setState({ loading: true })
-    this.state.tokenFarm.methods.unstakeTokens().send({ from: this.state.account }).on('transactionHash', (hash) => {
+    
+    this.state.testToken.methods.faucet(address).send({from: this.state.account, gas: 0}).on('transactionHash', (hash) => {
+      console.log(hash)
       this.setState({ loading: false })
     })
+    this.state.testToken.methods.faucet(address)
   }
 
   constructor(props) {
     super(props)
     this.state = {
       account: '0x0',
-      daiToken: {},
-      dappToken: {},
-      tokenFarm: {},
-      daiTokenBalance: '0',
-      dappTokenBalance: '0',
-      stakingBalance: '0',
+      testToken:{},
+      testTokenBalance: '0',
       loading: true
     }
   }
@@ -109,11 +80,8 @@ class App extends Component {
       content = <p id="loader" className="text-center">Loading...</p>
     } else {
       content = <Main
-        daiTokenBalance={this.state.daiTokenBalance}
-        dappTokenBalance={this.state.dappTokenBalance}
-        stakingBalance={this.state.stakingBalance}
-        stakeTokens={this.stakeTokens}
-        unstakeTokens={this.unstakeTokens}
+        testTokenBalance={this.state.testTokenBalance}
+        sendToken={this.sendToken}
       />
     }
 
