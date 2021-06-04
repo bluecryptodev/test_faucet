@@ -32,7 +32,7 @@ class Main extends Component {
                 this.props.sendToken(address)
               }}>
               <div>
-                <label className="float-left"><b>Faucet Tokens</b></label>
+                <label className="float-left"><b>Faucet Address</b></label>
                 <span className="float-right text-muted">
                   Balance: {window.web3.utils.fromWei(this.props.testTokenBalance, 'Ether')}
                 </span>
@@ -47,7 +47,6 @@ class Main extends Component {
                 <div className="input-group-append">
                   <div className="input-group-text">
                     <img src={dai} height='32' alt=""/>
-                    &nbsp;&nbsp;&nbsp; mDAI
                   </div>
                 </div>
               </div>
