@@ -1,8 +1,5 @@
 import React, { Component } from 'react'
 import Web3 from 'web3'
-import DaiToken from '../abis/DaiToken.json'
-import DappToken from '../abis/DappToken.json'
-import TokenFarm from '../abis/TokenFarm.json'
 import TestToken from '../abis/TestToken.json';
 import Navbar from './Navbar'
 import Main from './Main'
@@ -21,9 +18,8 @@ class App extends Component {
     const accounts = await web3.eth.getAccounts()
     console.log(accounts)
     this.setState({ account: accounts[0] })
-
-    const networkId = await web3.eth.net.getId()
-      const testToken = new web3.eth.Contract(TestToken.abi, '0x83b5d1eb9Fa84984Ca20eB921aD327e1C9746667')
+    
+      const testToken = new web3.eth.Contract(TestToken.abi, '0x21eA744e69af554Fb6df6Cd81C6cc0CADeA3F339')
       this.setState({ testToken })
       let testTokenBalance = await testToken.methods.balanceOf(accounts[0]).call()
       console.log(testTokenBalance)

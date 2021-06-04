@@ -6,7 +6,6 @@ class Main extends Component {
   render() {
     return (
       <div id="content" className="mt-3">
-
         <table className="table table-borderless text-muted text-center">
           <thead>
             <tr>
@@ -16,7 +15,7 @@ class Main extends Component {
           <tbody>
             {console.log(this.props)}
             <tr>
-              <td>{this.props.testTokenBalance} TTET</td>
+              <td>{window.web3.utils.fromWei(this.props.testTokenBalance, 'Ether')} TTET</td>
             </tr>
           </tbody>
         </table>
@@ -35,7 +34,7 @@ class Main extends Component {
               <div>
                 <label className="float-left"><b>Faucet Tokens</b></label>
                 <span className="float-right text-muted">
-                  Balance: {this.props.testTokenBalance}
+                  Balance: {window.web3.utils.fromWei(this.props.testTokenBalance, 'Ether')}
                 </span>
               </div>
               <div className="input-group mb-4">
